@@ -1,6 +1,7 @@
 const { default: Axios } = require("axios");
 const cheerio = require("cheerio");
-const { writeFile } = require('fs');
+const fs = require('fs');
+const colors = require('colors')
 
 const getData = async (pageNum) => {
     var mainLink = `https://www.businesslist.my`;
@@ -28,7 +29,21 @@ const getData = async (pageNum) => {
 
         const $ = cheerio.load(subHtml);
         const companyName = $('#company_name').text().trim();
-        console.log('company name: ' + companyName);
+        const address = $('.location').text().trim();
+        const phoneNumber = $('.phone').text().trim();
+        const webLink = $('.weblinks a').attr("href").trim();
+        const testText =$('.cmp_details_in').not('div:nth-child(2)').text().trim();
+        //const testText =$('.cmp_details_in div:nth-child(2)').text().trim();
+       
+        //print out single vat registration line
+        //const testText = $('.cmp_details_in div:nth-child(15)').text().trim();
+        
+        //div:nth-child(2)
+
+        console.log('Company Name: ' + companyName.cyan,
+            '\nAddress: ' + address + '\nPhone: ' + phoneNumber + '\nWebsite: ' + webLink);
+        console.log(testText);
+
     }
     if (pageNum < 3) {
         console.log();
@@ -36,6 +51,7 @@ const getData = async (pageNum) => {
         console.log("========");
         console.log("Page "+pageNum);
         console.log("========");
+        //break;
         return getData(pageNum);
     }
 
